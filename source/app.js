@@ -5,6 +5,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyparser = require('body-parser');
 var app = express();
+const path = require('path');
 const port = process.env.PORT || 8080;
 const knex = require('knex')
 const knexx = require('./config/knex')
@@ -33,7 +34,9 @@ app.use(function (req, res, next) {
 });
 
 //routes
-
+app.get('/',(req,res)=>{
+    res.sendFile(path.join(__dirname+'/views/index.html'));
+})
 app.get('/api',(req,res)=>{
     res.send('this is sample api test call')
 });
