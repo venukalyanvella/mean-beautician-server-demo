@@ -1,0 +1,284 @@
+
+// /GET ALL BOOKINGS 
+
+module.exports.getAllBookings = async (request, response) => {
+
+    try {
+
+        const allBookings = await library.simpleSelect(Booking, '*', null);
+        if (allBookings.length == 0) {
+            console.log('No Booking Found');
+            return response.status(200).json({
+                success: false,
+                statusCode: 400,
+                message: `No Bookings Found ...!`,
+                data: null
+            })
+
+        }
+        return response.status(200).json({
+            success: true,
+            statusCode: 200,
+            message: '',
+            data: allBookings
+        })
+    } catch (error) {
+        console.log('No Booking Found on server error');
+        return response.status(200).json({
+            success: false,
+            statusCode: 403,
+            message: `Server error to get bookings`,
+            data: null
+        })
+
+    }
+
+
+}
+
+//GET BOOKINGS BY USERS
+
+module.exports.getBookingsByUser = async (request,response)=>{
+
+    var pageNo = 1;
+    var size = 5;
+    var query = {}
+    if(pageNo < 0 || pageNo ===0){
+        console.log('invalid page number');
+    }
+    query.skip = size * (pageNo - 1)
+    query.limit = size
+    // console.log(request.body.clientDetails);
+    try {
+
+        await Booking.query().select('*').whereRaw(`clientDetails = '${request.body.clientDetails}'`)
+        // .limit(query.size).offset(query.skip)
+        .then((result)=>{
+            // if(result.length == 0){
+            //     return response.status(200).json({
+            //                  success:true,
+            //                  statusCode:200,
+            //                  message:'no Booking Found'
+            //              })
+            // } 
+
+            return response.send(result)
+        })
+        .catch((error)=>{
+            return response.status(200).json({
+                success:false,
+                statusCode:400,
+                message:'no Booking Found',
+                data:error
+            })
+        })
+        
+        // const myBookings = await library.simpleSelect(Booking,'*',`clientDetails = '${request.body.clientDetails}'`)
+        // if(myBookings.length ==0){
+        //     return response.status(200).json({
+        //         success:true,
+        //         statusCode:200,
+        //         message:'no Booking Found'
+        //     })
+        // }
+        
+        // // console.log(myBookings);
+        // return response.send(myBookings);
+
+    } catch (error) {
+        return response.send('error',error)
+    }
+
+}
+
+//GET BOOKINGS BY BEAUTICIAN
+
+module.exports.getBookingsByBeautician = async (request, response) => {
+
+    try {
+        const getBueatician = await library.simpleSelect(Booking, '*', `BeauticianDetails=${request.body.beauticianName}`);
+        if (getBueatician.length == 0) {
+            console.log(`No Redords Found with this Bueatician ${request.body.beauticianName}`);
+            return response.status(200).json({
+                success: false,
+                statusCode: 400,
+                message: `No Redords Found with this Bueatician ${request.body.beauticianName}`,
+                data: null
+            })
+        }
+        return response.status(200).send(getBueatician)
+    } catch (error) {
+        return response.status(200).json({
+            success: false,
+            statusCode: 400,
+            message: `Server error on getting Data `,
+            data: null
+        })
+    }
+}
+
+// BOOKING BY ID 
+
+module.exports.getBookingById = (request, response) => {
+
+   const statusfind= statusCheck(Booking,'*','0','1')
+//    console.log(statusfind);
+// return response.send(statusfind);
+}
+
+//Add Booking
+
+module.exports.addbooking = (request, response) => {
+    if (request.body == '' && request.body == undefined) {
+        return response.status(200).json({
+            sucess: false,
+            statusCode: 401,
+            message: 'Body should not be empty',
+            data: null
+        })
+    }
+    const bookingData = request.body;
+    try {
+
+        Booking.query().insert(bookingData)
+            .then((booking) => {
+                // console.log(booking);
+                return response.status(200).json({
+                    success: true,
+                    statusCode: 201,
+                    message: `Booking Added`,
+                    data: booking
+                })
+            })
+            .catch((error) => {
+                console.log(error);
+                return response.status(200).json({
+                    success: false,
+                    statusCode: 401,
+                    message: `Failed To Add Booking`,
+                    data: null
+                })
+            })
+    } catch (error) {
+        return response.status(200).json({
+            success: false,
+            statusCode: 402,
+            message: `Server Error on add booking`,
+            data: null,
+            error: error
+        })
+    }
+
+}
+
+//change/update Booking By ID
+
+module.exports.chageBookingData = async (request,response)=>{
+
+    const id = request.params.id
+    
+    try {
+        Booking.query().whereRaw(`bookingid = '${id}'`).update({
+            date:request.body.date,
+            time:request.body.time
+        }).then((result)=>{
+            console.log('Booking Details Updated');
+            return response.status(200).json({
+                success:true,
+                statusCode:201,
+                message:'Booking Data Updated...',
+                data:null
+            })
+        })
+        .catch((err)=>{
+            console.log('Booking Details Updating Failed');
+            return response.status(200).json({
+                success:false,
+                statusCode:401,
+                message:'Booking Data Updating Failed...',
+                data:null
+            })
+        })
+    } catch (error) {
+        console.log('server error Booking Details ');
+            return response.status(200).json({
+                success:false,
+                statusCode:401,
+                message:'Server error',
+                data:null
+            })
+    }
+
+}
+
+// REMOVE BOOKING BY USER
+
+module.exports.removeBooking = (request, response) => {
+
+    const r_id = parseInt(request.params.id);
+
+    Booking.query().deleteById(r_id)
+        .then((result) => {
+            if (result.length == 0) {
+                console.log('Failed to remove booking');
+                return response.status(200).json({
+                    success: false,
+                    statusCode: 400,
+                    message: `No Bookings Found ...!`,
+                    data: null
+                })
+            }
+            return response.status(200).json({
+                success: true,
+                statusCode: 201,
+                message: `Booking Removed Successfully....`,
+                data: null
+            })
+        })
+        .catch((error) => {
+            console.log('Failed to remove booking');
+            return response.status(200).json({
+                success: false,
+                statusCode: 400,
+                message: `No Bookings Found ...!`,
+                data: null
+            })
+        })
+
+}
+
+//STATUS MODIFIER
+
+module.exports.changeStatus = async (request,response)=>{
+
+    let result = await statusCheck(Booking,'*',request.body.clientDetails)
+
+    if(result[0].bookingStatus == 0){
+       Booking.query().patch({bookingStatus:true}).whereRaw(`clientDetails='${request.body.clientDetails}'`)
+       .then((result)=>{
+        // console.log('booking Status updated',result);
+        return response.status(200).json({
+            success:true,
+            statusCode:201,
+            message:'Booking status Updated'
+        })
+       })
+       .catch((error)=>{
+        console.log('error on updating status',error);
+        return response.status(200).json({
+            success:false,
+            statusCode:401,
+            message:'Booking Status Updating Failed'
+        })
+       })
+     } else{
+        return response.send('booking status already updated')
+        }
+}
+
+async function statusCheck(model,column,data){
+    let wherecon = `clientDetails = '${data}'`;
+    let status = await library.simpleSelect(model,column,wherecon);
+    // console.log(status);
+    return status
+}
