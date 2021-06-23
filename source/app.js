@@ -22,7 +22,7 @@ const BeautyServiceRoute = require('../source/routes/beautyService.route');
 const BeautyParlourRoute = require('../source/routes/Beautyparlour.route');
 //middlewares
 
-
+app.use(express.static(path.join(__dirname, '../public')));
 app.use(cors());
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({extended:true}));
@@ -36,7 +36,7 @@ app.use(function (req, res, next) {
 
 //routes
 app.get('/',(req,res)=>{
-    res.sendFile(path.join(__dirname+'/views/index.html'));
+    res.sendFile(path.join(__dirname, '../public/index.html'));
 })
 app.get('/connect',(req,res)=>{
     var connection = mysql.createConnection({
