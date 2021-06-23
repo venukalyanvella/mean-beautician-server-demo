@@ -55,10 +55,10 @@ app.get('/connect',(req,res)=>{
         }
     })
 })
-app.get('/api',(req,res)=>{
-   res.sendFile(path.join(__dirname+'/views/index.html'));
+// app.get('/api',(req,res)=>{
+//    res.sendFile(path.join(__dirname+'/views/index.html'));
 
-});
+// });
 
 app.use('/api/user',userRoute);
 app.use('/api/booking',bookingRoute);
