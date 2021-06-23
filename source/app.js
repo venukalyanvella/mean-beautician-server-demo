@@ -41,18 +41,15 @@ app.get('/',(req,res)=>{
 app.get('/connect',(req,res)=>{
     var connection = mysql.createConnection({
         host:process.env.DB_HOST,
-        username:process.env.DB_USER,
+        user:process.env.DB_USER,
         password:process.env.DB_PASSWORD,
         database:process.env.DB_NAME
     })
     connection.connect((err,data)=>{
-        if(err){
-            console.log('failed to connect database',err);
-            res.status(200).send('Failed to connect Database');
-        }else{
-            console.log('Database COnnected');
-            res.status(200).send('Database COnnected Succesfully')
-        }
+        
+            if (err) throw err;
+            console.log("Connected!");
+         
     })
 })
 // app.get('/api',(req,res)=>{
