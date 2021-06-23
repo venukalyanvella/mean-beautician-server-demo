@@ -4,6 +4,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const bodyparser = require('body-parser');
+const mysql = require('mysql')
 var app = express();
 const path = require('path');
 const port = process.env.PORT || 8080;
@@ -37,8 +38,26 @@ app.use(function (req, res, next) {
 app.get('/',(req,res)=>{
     res.sendFile(path.join(__dirname+'/views/index.html'));
 })
+app.get('/connect',(req,res)=>{
+    var connection = mysql.createConnection({
+        host:process.env.DB_HOST,
+        username:process.env.DB_USER,
+        password:process.env.DB_PASSWORD,
+        database:process.env.DB_NAME
+    })
+    connection.connect((err,data)=>{
+        if(err){
+            console.log('failed to connect database',err);
+            res.status(200).send('Failed to connect Database');
+        }else{
+            console.log('Database COnnected');
+            res.status(200).send('Database COnnected Succesfully')
+        }
+    })
+})
 app.get('/api',(req,res)=>{
-    res.send('this is sample api test call')
+   res.sendFile(path.join(__dirname+'/views/index.html'));
+
 });
 
 app.use('/api/user',userRoute);
@@ -49,6 +68,8 @@ app.use('/api/report',reportCtrl);
 app.use('/api/category',CategoriesRoute);
 app.use('/api/beautyservice',BeautyServiceRoute);
 app.use('/api/beautyparlour',BeautyParlourRoute);
+
+
 //server
 
 app.listen(port,()=>{
