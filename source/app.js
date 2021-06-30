@@ -35,20 +35,33 @@ app.use(function (req, res, next) {
 });
 
 //routes
-app.get('/',(req,res)=>{
-    res.sendFile(path.join(__dirname, '../public/index.html'));
-})
+// app.get('/',(req,res)=>{
+//     res.sendFile(path.join(__dirname, '../public/index.html'));
+// })
 app.get('/connect',(req,res)=>{
     var connection = mysql.createConnection({
-        host:process.env.DB_HOST,
+        host:process.env.HOST,
         user:process.env.DB_USER,
         password:process.env.DB_PASSWORD,
-        database:process.env.DB_NAME
+        database:process.env.DB_NAME,
+        port:3305
     })
     connection.connect((err,data)=>{
         
-            if (err) throw err;
-            console.log("Connected!");
+            if (err) {
+                res.status(200).json({
+                    message:'Failed to connect Database,Please Check Connection',
+                    data:err
+                });
+                console.log('Error on connecting database');
+            }else{
+                console.log("Connected!");
+                res.status(200).json({
+                    success:true,
+                    message:'Database Connected'
+                }) 
+            }
+            
          
     })
 })

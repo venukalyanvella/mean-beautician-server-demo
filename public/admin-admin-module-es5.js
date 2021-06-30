@@ -1631,13 +1631,19 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     var _angular_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
     /*! @angular/core */
     "./node_modules/@angular/core/fesm2015/core.js");
+    /* harmony import */
+
+
+    var _environments_environment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
+    /*! ../../../environments/environment */
+    "./src/environments/environment.ts");
 
     var BeautyservicesService = /*#__PURE__*/function () {
       function BeautyservicesService(_http) {
         _classCallCheck(this, BeautyservicesService);
 
         this._http = _http;
-        this.apiUrl = "api/";
+        this.apiUrl = _environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].hostUrl;
       }
 
       _createClass(BeautyservicesService, [{
