@@ -4066,7 +4066,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
     var environment = {
       production: false,
-      hostUrl: 'http://localhost:8080/api/',
+      hostUrl: 'https://beauticiansystem-demo.herokuapp.com',
       name: 'localhost',
       port: 8080,
       envName: 'user'
