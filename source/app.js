@@ -70,14 +70,14 @@ app.get('/connect',(req,res)=>{
 
 // });
 
-app.use('/api/user',userRoute);
-app.use('/api/booking',bookingRoute);
-app.use('/api/beautician',beauticianRoute);
-app.use('/api/appointment',appointmentRoute);
-app.use('/api/report',reportCtrl);
-app.use('/api/category',CategoriesRoute);
-app.use('/api/beautyservice',BeautyServiceRoute);
-app.use('/api/beautyparlour',BeautyParlourRoute);
+app.use('/user',userRoute);
+app.use('/booking',bookingRoute);
+app.use('/beautician',beauticianRoute);
+app.use('/appointment',appointmentRoute);
+app.use('/report',reportCtrl);
+app.use('/category',CategoriesRoute);
+app.use('/beautyservice',BeautyServiceRoute);
+app.use('/beautyparlour',BeautyParlourRoute);
 
 
 //server
