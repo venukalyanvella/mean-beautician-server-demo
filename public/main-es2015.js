@@ -2382,7 +2382,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const environment = {
     production: false,
-    hostUrl: 'https://beauticiansystem-demo.herokuapp.com',
+    hostUrl: 'https://beauticiansystem-demo.herokuapp.com/',
     name: 'localhost',
     port: 8080,
     envName: 'user'
